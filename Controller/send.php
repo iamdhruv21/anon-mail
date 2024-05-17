@@ -22,8 +22,8 @@ $userid= $result['user_id'];
 
 $db->query("insert into mail(sender, receiver, subject, message, send_time, user_id)
 values(:sender, :receiver, :subject, :message, now(), {$userid});", [
-    'sender' => $sender,
-    'receiver' => $receiver,
+    'sender' => $receiver,
+    'receiver' => $sender,
     'subject' => $title,
     'message' => $message
 ]);
