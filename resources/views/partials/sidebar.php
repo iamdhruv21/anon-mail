@@ -1,10 +1,10 @@
 <div class="side-bar">
     <div class="side-bar-content">
         <div class="button-wrapper">
-            <button class="compose-button">
+            <a href="/sent" class="compose-button">
                 <img src="https://i.ibb.co/6nk5kzD/Screen-Shot-2018-05-18-at-12-07-42-PM.png" alt="">
                 <p>COMPOSE</p>
-            </button>
+            </a>
         </div>
         <div class="side-bar-items">
             <div class="section">

@@ -3,17 +3,26 @@
 namespace Core;
 class Router
 {
-    protected array $route = [];
+    public static $route = [];
 
-    public function route($uri, $method)
+    public static function add($method, $uri, $controller): void
     {
-        $flag = true;
-        foreach ($this->route as $item) {
+        static::$route[] = [
+            'method' => $method,
+            'uri' => $uri,
+            'controller' => $controller
+        ];
+    }
+
+    public static function route($uri, $method): void
+    {
+
+        foreach (static::$route as $item) {
             if ($item['method'] == $method && $item['uri'] == $uri) {
-                if($item['middleware']) {
-                    //call middleware
-                }
-                require $item['controller'];
+//                if($item['middleware']) {
+//                    //call middleware
+//                }
+                require "../Controller" . $item['controller'];
                 die();
             }
         }

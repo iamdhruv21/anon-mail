@@ -16,9 +16,10 @@ $db->query('select * from users where username = :username', [
 $result = $db->fetch();
 
 if(! $result) {
-    $errors[] = [
+    $_SESSION['errors'][] = [
         'username' => 'username not found'
     ];
+
     header('location: /');
 } else {
 
@@ -34,7 +35,7 @@ if(! $result) {
         header('location: /inbox');
     }
     else {
-        $errors[] = [
+        $_SESSION['errors'][] = [
             'password' => 'incorrect credentials'
         ];
 

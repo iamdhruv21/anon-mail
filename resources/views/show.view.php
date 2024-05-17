@@ -1,10 +1,21 @@
 <?php
 
+use Core\Database;
+
 session_start();
 if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
     header("location: /");
     exit;
 }
+
+$db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
+
+$db->query('select * from mail where sender = :sender', [
+    'sender' => $_SESSION['email']
+]);
+
+$result = $db->fetchAll();
+
 ?>
 
 <?php require "partials/header.php" ?>
@@ -52,30 +63,32 @@ if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
             </div>
         </div>
         <div class="mail-list">
+            <?php foreach ($result as $item) : ?>
                 <input
                     class="mail-item"
                     name="mail-item"
                     type="radio"
-                    id="mail-1"
+                    id="mail-<?= $item['id']?>"
                     checked
                 />
-                <label for="mail-1" class="mail">
+                <label for="mail-<?= $item['id']?>" class="mail">
 
                         <div class="profile-pic">
-                            <div class="profile-logo blue">
-                                <p>D</p>
+                            <div class="profile-logo <?php $a = [1=>'blue', 2 => 'yellow', 3 => 'green']; echo $a[(rand(1, 3))]?>">
+                                <p><?= strtoupper(substr($item['receiver'], 0, 1))?></p>
                             </div>
                         </div>
                         <div class="mail-content">
                             <div class="mail-header">
-                                <p class="contact-name">Receiver</p>
-                                <p class="mail-time">12 Aug</p>
+                                <p class="contact-name"><?= $item['receiver']?></p>
+                                <p class="mail-time"><?= $item['send_time']?></p>
                             </div>
-                            <a href="/mail">
-                                <p class="mail-text">This is the message</p>
+                            <a href="/mail?id=<?=$item['id']?>">
+                                <p class="mail-text"><?= $item['message']?></p>
                             </a>
                         </div>
                 </label>
+            <?php endforeach; ?>
         </div>
     </div>
 

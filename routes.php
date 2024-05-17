@@ -1,11 +1,17 @@
 <?php
 
-$routes->add('GET', '/', '../Controller/index.php');
-$routes->add('GET', '/register', '../Controller/register.php');
-$routes->add('POST', '/register', '../Controller/register/index.php');
+use \Core\Route;
 
-$routes->add('GET', '/inbox', '../Controller/show.php');
-$routes->add('GET', '/mail', '../resources/views/partials/show.php');
+//Route::get('/', 'HomeController@home');
+Route::add('GET', '/', '/index.php');
+Route::add('GET', '/register', '/register.php');
+Route::add('POST', '/register', '/register/index.php');
 
-$routes->add('POST', '/', '../Controller/login.php');
-$routes->add('GET', '/destroy', '../Controller/destroy.php');
+Route::add('GET', '/inbox', '/show.php');
+Route::add('GET', '/mail', '/mail.php');
+
+Route::add('POST', '/', '/login.php');
+Route::add('GET', '/destroy', '/destroy.php');
+
+Route::add('GET', '/sent', '/sent.php');
+Route::add('POST', '/send', '/send.php');

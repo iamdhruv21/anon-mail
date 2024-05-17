@@ -583,11 +583,11 @@
         .reaction-buttons {
             padding-top: 20px;
         }
-        .reaction-buttons button {
+        .reaction-buttons input, .reaction-buttons button {
             color: #4285F4;
             border: 1px solid #E4E8EB;
             padding: 12px;
-            border-radius: 4px;
+            border-radius: 3rem;
             margin-right: 10px;
         }
 
@@ -639,6 +639,13 @@
             color: #202124;
             font-size: 24px;
             font-weight: 400;
+        }
+
+        .inbox{
+            padding: 4px 8px;
+            outline: none;
+            border: none;
+
         }
 
         .box .logo
