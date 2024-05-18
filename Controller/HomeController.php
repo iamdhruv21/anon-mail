@@ -35,10 +35,9 @@ class HomeController extends Controller
         $result = $db->fetch();
 
         if($result) {
-            $GLOBALS['errors'][] = [
-                'username' => 'Username already exist'
-            ];
-            var_dump('Username already exist');
+            self::view('register.view.php', [
+                'error' => 'Username or password is incorrect'
+            ]);
             die();
         }
         else {
@@ -54,19 +53,20 @@ class HomeController extends Controller
 
                 session_start();
 
-                $_SESSION['logged'] = true;
-                $_SESSION['username'] = $username;
-                $_SESSION['firstname'] = $firstname;
-                $_SESSION['lastname'] = $lastname;
-                $_SESSION['email'] = $firstname.'@anonmail.com';
+                SessionController::put([
+                    'logged' => true,
+                    'username' => $username,
+                    'firstname' => $firstname,
+                    'lastname' => $lastname,
+                    'email' => $firstname.'@anonmail.com'
+                ]);
 
                 self::redirect('/inbox');
             }
             else {
-                $GLOBALS['errors'][] = [
-                    'password' => 'password does not match'
-                ];
-                var_dump('password does not match');
+                self::view('register.view.php', [
+                    'error' => 'Username or password is incorrect'
+                ]);
                 die();
             }
         }
@@ -86,30 +86,25 @@ class HomeController extends Controller
 
         $result = $db->fetch();
         if(! $result) {
-            $_SESSION['errors'][] = [
-                'username' => 'username not found'
-            ];
-            var_dump('username not found');
-            self::redirect('/');
+            self::view('index.view.php', [
+                'error' => 'Username or password is incorrect'
+            ]);
         } else {
             if($result['password'] === $password){
-
-                $_SESSION['logged'] = true;
-                $_SESSION['username'] = $result['username'];
-                $_SESSION['firstname'] = $result['firstname'];
-                $_SESSION['lastname'] = $result['lastname'];
-                $_SESSION['email'] = $result['email'];
+                SessionController::put([
+                    'logged' => true,
+                    'username' => $result['username'],
+                    'firstname' => $result['firstname'],
+                    'lastname' => $result['lastname'],
+                    'email' => $result['email']
+                ]);
 
                 self::redirect('/inbox');
             }
             else {
-
-                $_SESSION['errors'][] = [
-                    'password' => 'incorrect credentials'
-                ];
-                var_dump('password not found');
-
-                self::redirect('/');
+                self::view('index.view.php', [
+                    'error' => 'Username or password is incorrect'
+                ]);
             }
 
         }

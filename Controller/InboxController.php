@@ -40,17 +40,10 @@ class InboxController extends Controller
 
     public static function sendStore()
     {
-
-        $sender = $_SESSION['email'];
-        $receiver = $_POST['sendto'];
-        $title = $_POST['sendtitle'];
-        $message = $_POST['sendmessage'];
-
-
         $db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
 
         $db->query('Select * from users where email = :email', [
-            'email' => $sender
+            'email' => $_SESSION['email']
         ]);
 
         $result = $db->fetch();
@@ -58,10 +51,10 @@ class InboxController extends Controller
 
         $db->query("insert into mail(sender, receiver, subject, message, send_time, user_id)
 values(:sender, :receiver, :subject, :message, now(), {$userid});", [
-            'sender' => $receiver,
-            'receiver' => $sender,
-            'subject' => $title,
-            'message' => $message
+            'sender' => $_SESSION['email'],
+            'receiver' => $_POST['sendto'],
+            'subject' => $_POST['sendtitle'],
+            'message' => $_POST['sendmessage']
         ]);
 
         self::redirect('/inbox');

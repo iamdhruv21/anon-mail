@@ -11,4 +11,11 @@ class SessionController extends Controller
 
         self::redirect('/');
     }
+
+    public static function put($arr = [])
+    {
+        foreach ($arr as $key => $value) {
+            $_SESSION[$key] = $value;
+        }
+    }
 }
