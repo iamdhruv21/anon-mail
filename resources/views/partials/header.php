@@ -94,12 +94,13 @@
             height: 34px;
             background-color: #f7f8f9;
             border-radius: 6px;
-            padding: 1px;
+            padding: 2px 8px;
         }
         .search-area input {
             flex: 1;
             background: none;
             border: none;
+            outline: none;
         }
         .search-area input::-moz-placeholder {
             font-weight: 400;
@@ -756,41 +757,35 @@
             <div class="logo-wrapper">
                 <p class="logo-name">Anon<span>Mail</span></p>
             </div>
-            <div class="search-area">
-                <button >
-                    <svg
-                        width="20"
-                        height="20"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M12.258 11.667h.659l4.158 4.166-1.242 1.242-4.166-4.158v-.659l-.225-.233a5.393 5.393 0 0 1-3.525 1.308 5.417 5.417 0 1 1 5.416-5.416 5.393 5.393 0 0 1-1.308 3.525l.233.225zm-8.091-3.75a3.745 3.745 0 0 0 3.75 3.75 3.745 3.745 0 0 0 3.75-3.75 3.745 3.745 0 0 0-3.75-3.75 3.745 3.745 0 0 0-3.75 3.75z"
-                            fill="#909191"
-                            opacity=".8"
-                        />
-                    </svg>
-                </button>
-                <input type="text" placeholder="Search" />
-                <button >
-                    <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 18 18"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <g opacity="0.6">
+            <?php
+                $login = false;
+
+                if(isset($_SESSION['logged'])) {
+                    $login = true;
+                }
+            ?>
+            <?php if ($login) :?>
+                <form method="post" action="/inbox" class="search-area">
+                    <input type="text" placeholder="Search" name="search"/>
+                    <button>
+                        <input type="submit" value="">
+                        <svg
+                            width="20"
+                            height="20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
                             <path
-                                d="M5.25 7.5L9 11.25L12.75 7.5L5.25 7.5Z"
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M12.258 11.667h.659l4.158 4.166-1.242 1.242-4.166-4.158v-.659l-.225-.233a5.393 5.393 0 0 1-3.525 1.308 5.417 5.417 0 1 1 5.416-5.416 5.393 5.393 0 0 1-1.308 3.525l.233.225zm-8.091-3.75a3.745 3.745 0 0 0 3.75 3.75 3.745 3.745 0 0 0 3.75-3.75 3.745 3.745 0 0 0-3.75-3.75 3.745 3.745 0 0 0-3.75 3.75z"
                                 fill="#909191"
+                                opacity=".8"
                             />
-                        </g>
-                    </svg>
-                </button>
-            </div>
+                        </svg>
+                    </button>
+                </form>
+            <?php endif;?>
         </div>
         <div class="right">
             <button>
@@ -799,20 +794,11 @@
                 </svg>
             </button>
             <button>
-                <?php
-                $login = false;
-
-                if(isset($_SESSION['logged'])) {
-                    $login = true;
-                }
-
-                if($login) {
-                    echo '<img src="https://randomuser.me/api/portraits/men/34.jpg">';
-                }
-                else {
-                    echo "<a href='/' style='text-decoration: none'>Log in</a>";
-                }
-                ?>
+                <?php if($login) : ?>
+                    <a href="/profile"> <img src="https://randomuser.me/api/portraits/men/34.jpg" alt=""></a>
+                <?php else : ?>
+                    <a href='/' style='text-decoration: none'>Log in</a>
+                <?php endif;?>
             </button>
             <?php if($login) : ?>
                 <button>

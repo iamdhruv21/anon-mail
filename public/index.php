@@ -2,6 +2,8 @@
 
 use Core\Router;
 
+session_start();
+
 $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 $method = strtoupper($_SERVER['REQUEST_METHOD']);
 

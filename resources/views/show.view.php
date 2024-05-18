@@ -2,19 +2,11 @@
 
 use Core\Database;
 
-session_start();
 if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
     header("location: /");
     exit;
 }
 
-$db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
-
-$db->query('select * from mail where sender = :sender', [
-    'sender' => $_SESSION['email']
-]);
-
-$result = $db->fetchAll();
 
 ?>
 
@@ -25,7 +17,7 @@ $result = $db->fetchAll();
     <div class="conversations-list">
         <div class="action-bar">
             <div class="actions-left">
-                Welcome, <span style="color: #4285F4;"><?= $_SESSION['firstname'] ?? 'Guest'?></span>
+                Welcome, <span style="color: #4285F4;"><?= strtoupper($_SESSION['firstname']) ?? 'Guest'?></span>
             </div>
             <div class="actions-right">
                 <button>
@@ -80,7 +72,15 @@ $result = $db->fetchAll();
                         </div>
                         <div class="mail-content">
                             <div class="mail-header">
-                                <p class="contact-name"><?= $item['receiver']?></p>
+                                <?php
+                                $db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
+
+                                $db->query('select * from users where email = :email', [
+                                    'email' => $item['receiver']
+                                ]);
+
+                                $result = $db->fetch();?>
+                                <p class="contact-name"><?= $result['firstname'].' '.$result['lastname'];?></p>
                                 <p class="mail-time"><?= $item['send_time']?></p>
                             </div>
                             <a href="/mail?id=<?=$item['id']?>">
