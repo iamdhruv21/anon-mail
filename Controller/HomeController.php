@@ -15,10 +15,8 @@ class HomeController extends Controller
         self::view('register.view.php');
     }
 
-
     public static function registerStore()
     {
-
         $username = $_POST['username'];
         $firstname = $_POST['firstName'];
         $lastname = $_POST['lastName'];
@@ -74,7 +72,6 @@ class HomeController extends Controller
 
     public static function loginStore()
     {
-
         $username = $_POST['username'];
         $password = $_POST['password'];
 
@@ -106,9 +103,6 @@ class HomeController extends Controller
                     'error' => 'Username or password is incorrect'
                 ]);
             }
-
         }
     }
-
-
 }

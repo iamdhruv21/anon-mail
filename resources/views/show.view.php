@@ -56,38 +56,40 @@ if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
         </div>
         <div class="mail-list">
             <?php foreach ($result as $item) : ?>
-                <input
-                    class="mail-item"
-                    name="mail-item"
-                    type="radio"
-                    id="mail-<?= $item['id']?>"
-                    checked
-                />
-                <label for="mail-<?= $item['id']?>" class="mail">
+                <?php if ($item['sender'] == $_SESSION['email']) : ?>
+                    <input
+                        class="mail-item"
+                        name="mail-item"
+                        type="radio"
+                        id="mail-<?= $item['id']?>"
+                        checked
+                    />
+                    <label for="mail-<?= $item['id']?>" class="mail">
 
-                        <div class="profile-pic">
-                            <div class="profile-logo <?php $a = [1=>'blue', 2 => 'yellow', 3 => 'green']; echo $a[(rand(1, 3))]?>">
-                                <p><?= strtoupper(substr($item['receiver'], 0, 1))?></p>
+                            <div class="profile-pic">
+                                <div class="profile-logo <?php $a = [1=>'blue', 2 => 'yellow', 3 => 'green']; echo $a[(rand(1, 3))]?>">
+                                    <p><?= strtoupper(substr($item['receiver'], 0, 1))?></p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mail-content">
-                            <div class="mail-header">
-                                <?php
-                                $db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
+                            <div class="mail-content">
+                                <div class="mail-header">
+                                    <?php
+                                    $db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
 
-                                $db->query('select * from users where email = :email', [
-                                    'email' => $item['receiver']
-                                ]);
+                                    $db->query('select * from users where email = :email', [
+                                        'email' => $item['receiver']
+                                    ]);
 
-                                $result = $db->fetch();?>
-                                <p class="contact-name"><?= $result['firstname'].' '.$result['lastname'];?></p>
-                                <p class="mail-time"><?= $item['send_time']?></p>
+                                    $result = $db->fetch();?>
+                                    <p class="contact-name"><?= $result['firstname'].' '.$result['lastname'];?></p>
+                                    <p class="mail-time"><?= $item['send_time']?></p>
+                                </div>
+                                <a href="/mail?id=<?=$item['id']?>">
+                                    <p class="mail-text"><?= $item['message']?></p>
+                                </a>
                             </div>
-                            <a href="/mail?id=<?=$item['id']?>">
-                                <p class="mail-text"><?= $item['message']?></p>
-                            </a>
-                        </div>
-                </label>
+                    </label>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
     </div>
