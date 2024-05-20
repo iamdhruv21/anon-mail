@@ -13,6 +13,7 @@ spl_autoload_register(function ($class){
 });
 
 require "../routes.php";
+require "functions.php";
 
 Router::route($uri, $method);
 

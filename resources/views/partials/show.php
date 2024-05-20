@@ -1,6 +1,6 @@
 <?php
 
-use \Core\Database;
+use \Core\DB;
 
 if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
     header("location: /");
@@ -9,7 +9,7 @@ if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
 
 $id = $_GET['id'];
 
-$db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
+$db = new DB('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
 
 $db->query('select * from mail where id = :id', [
     'id' => $id
