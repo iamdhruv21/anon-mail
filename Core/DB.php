@@ -2,7 +2,8 @@
 
 namespace Core;
 
-use SQLite3;
+use PDO;
+use PDOException;
 
 class DB
 {
@@ -11,13 +12,8 @@ class DB
 
     public static function connect(): void
     {
-        $servername = '127.0.0.2';
-        $dbname = 'anonmail';
-        $username = 'root';
-        $password = '@21Nov2004';
-
         try {
-            self::$connection = new SQLite3("../database/anonmail.sqlite");
+            self::$connection = new PDO("sqlite:../database/anonmail.sqlite");
         } catch (PDOException $e) {
             echo "Error connecting to the database: " . $e->getMessage();
         }
