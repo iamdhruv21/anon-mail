@@ -1,3 +1,4 @@
+
 <?php
 
 use \Core\Database;
@@ -7,33 +8,30 @@ if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
     exit;
 }
 
-$id = $_GET['id'];
+//$db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
+//
+//$db->query('select * from mail where id = :id', [
+//    'id' => $id
+//]);
 
-$db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
-
-$db->query('select * from mail where id = :id', [
-    'id' => $id
-]);
-
-$result = $db->fetch();
+//$result = $db->fetch();
 ?>
 
-<?php require "header.php"?>
-<?php require 'sidebar.php'?>
+<?php require "partials/header.php"?>
+<?php require 'partials/sidebar.php'?>
 
     <div class="mail-area">
         <div class="content-wrapper">
             <div class="profile-pic">
                 <div class="profile-logo yellow">
-                    <p><?= strtoupper(substr($result['receiver'], 0, 1))?></p>
+                    <p>D</p>
                 </div>
             </div>
 
-            <div class="mail-content-wrapper">
+            <form class="mail-content-wrapper" action="/send" method="post">
                 <div class="contact-info">
-                    <p class="contact-name"><?=$result['receiver']?></p>
+                    <p class="contact-name">To: <input type="text" id="sendto" name="sendto" class="inbox"></p>
                     <div class="right">
-                        <p class="mail-time"><?=$result['send_time']?></p>
                         <button>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path opacity="0.3" d="M10.0667 12.75L6.93333 14.6417L7.76667 11.075L5 8.675L8.65 8.35833L10.0667 5L11.4917 8.36667L15.1417 8.68333L12.375 11.0833L13.2083 14.65L10.0667 12.75Z" fill="#909191"/>
@@ -48,25 +46,23 @@ $result = $db->fetch();
                         </button>
                     </div>
                 </div>
-                <p>to: <?=$result['sender']?><br><br>
+                <p>from: <?= $_SESSION['email']?><br><br>
 
-                    Title: <strong><?=$result['subject']?></strong>.
+                    Title: <input class="inbox" type="text" id="sendtitle" name="sendtitle">
                     <br>
                     <br>
-                    <?=$result['message']?>
+                    Message: <input class="inbox" type="text" id="sendmessage" name="sendmessage">
                     <br>
                     <br>
                     <br>
                     Best,
                     <br>
-                    <br>                    - <?php echo strtoupper(substr($result['receiver'], 0, 1)); echo substr($result['receiver'], 1, stripos($result['receiver'], '@', 0)-1)?></p>
+                    <br>                    - Name</p>
                 <div class="reaction-buttons">
-                    <button>Looking forward to it!</button>
-                    <button>You’re welcome!</button>
-                    <button>Same to you!</button>
+                    <input type="submit" class="compose-button" value="S E N D">
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
-<?php require "footer.php"?>
+<?php require "partials/footer.php"?>

@@ -20,8 +20,9 @@
         </div>
 
         <div class="inputBox">
-            <input type="password" name="password" required onkeyup="this.setAttribute('value', this.value);"  value="">
+            <input style="margin-bottom: 0.3rem" type="password" name="password" required onkeyup="this.setAttribute('value', this.value);"  value="">
             <label>Password</label>
+            <p style="font-size: small;text-align: left;margin: 0 0 0.5rem 0; padding: 4px 12px;color: red;"><?= $error ?? ''?></p>
         </div>
 
         <div class="inputBox">

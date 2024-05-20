@@ -1,17 +1,20 @@
 <?php
 
+use Core\Router;
 
-require "../Core/Routes.php";
-
-use Core\Routes;
+session_start();
 
 $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 $method = strtoupper($_SERVER['REQUEST_METHOD']);
 
-$errors = [];
+spl_autoload_register(function ($class){
+    $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+    require ( '../' . $class . '.php');
+});
 
-$routes = new Routes();
 require "../routes.php";
 
-$routes->route($uri, $method);
+Router::route($uri, $method);
+
+session_destroy();
 

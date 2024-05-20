@@ -34,4 +34,9 @@ class Database
     {
         return $this->statement->fetch();
     }
+
+    public function fetchAll()
+    {
+        return $this->statement->fetchAll();
+    }
 }
