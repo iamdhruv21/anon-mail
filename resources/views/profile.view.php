@@ -1,7 +1,7 @@
 
 <?php
 
-use \Core\Database;
+use \Core\DB;
 
 if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
     header("location: /");

@@ -2,22 +2,19 @@
 
 namespace Controller;
 
-use http\Params;
-
 class Controller
 {
-    public static function redirect($location)
+    public function redirect(string $location): void
     {
-        header("location: $location");
+        header("Location: $location");
         die();
     }
 
-    public static function view($location, $params = [])
+    public function view($location, $params = [])
     {
         extract($params);
 
         require "../resources/views/$location";
         die();
     }
-
 }

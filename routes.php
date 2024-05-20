@@ -1,22 +1,23 @@
 <?php
 
-use Controller\HomeController;
+use Controller\AuthController;
 use Controller\InboxController;
-use Controller\SessionController;
-use \Core\Route;
+use Core\Route;
+use Core\Session;
 
-//Route::get('/', 'HomeController@home');
-Route::add('GET', '/', [HomeController::class, 'loginView']);
-Route::add('GET', '/register', [HomeController::class, 'registerView']);
-Route::add('POST', '/register', [HomeController::class, 'registerStore']);
+// Auth Routes
+Route::add('GET', '/', [AuthController::class, 'getLogin']);
+Route::add('POST', '/', [AuthController::class, 'Login']);
+Route::add('GET', 'register', [AuthController::class, 'getRegister']);
+Route::add('POST', 'register', [AuthController::class, 'register']);
 
-Route::add('GET', '/inbox', [InboxController::class, 'inboxView']);
+// Mailbox Routes
+Route::add('GET', '/inbox', [InboxController::class, 'inbox']);
 Route::add('POST', '/inbox', [InboxController::class, 'search']);
-Route::add('GET', '/mail', [InboxController::class, 'mailView']);
+Route::add('GET', '/mail', [InboxController::class, 'mail']);
 
-Route::add('POST', '/', [HomeController::class, 'loginStore']);
-Route::add('GET', '/destroy', [SessionController::class, 'destroySession']);
+Route::add('GET', '/destroy', [Session::class, 'destroy']);
 
-Route::add('GET', '/sent', [InboxController::class, 'sendView']);
+Route::add('GET', '/sent', [InboxController::class, 'send']);
 Route::add('GET', '/profile', [InboxController::class, 'profileView']);
 Route::add('POST', '/send', [InboxController::class, 'sendStore']);

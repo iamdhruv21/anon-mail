@@ -1,23 +1,12 @@
 <?php
-
-use Core\Database;
-
-if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
-    header("location: /");
-    exit;
-}
-
-
+    require "partials/header.php";
+    require "partials/sidebar.php"
 ?>
-
-<?php require "partials/header.php" ?>
-
-<?php require "partials/sidebar.php"?>
 
     <div class="conversations-list">
         <div class="action-bar">
             <div class="actions-left">
-                Welcome, <span style="color: #4285F4;"><?= strtoupper($_SESSION['firstname']) ?? 'Guest'?></span>
+                Welcome, <span style="color: #4285F4;"><?= ucfirst($user['firstname']) ?? 'Guest'?></span>
             </div>
             <div class="actions-right">
                 <button>
@@ -56,7 +45,7 @@ if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
         </div>
         <div class="mail-list">
             <?php foreach ($result as $item) : ?>
-                <?php if ($item['sender'] == $_SESSION['email']) : ?>
+                <?php if ($item['receiver'] == $user['email']) : ?>
                     <input
                         class="mail-item"
                         name="mail-item"
@@ -67,21 +56,13 @@ if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
                     <label for="mail-<?= $item['id']?>" class="mail">
 
                             <div class="profile-pic">
-                                <div class="profile-logo <?php $a = [1=>'blue', 2 => 'yellow', 3 => 'green']; echo $a[(rand(1, 3))]?>">
+                                <div class="profile-logo <?php $a = [1=>'blue', 2 => 'yellow', 3 => 'green']; echo $a[(rand(1, 3))]; $flag=false;?>">
                                     <p><?= strtoupper(substr($item['receiver'], 0, 1))?></p>
                                 </div>
                             </div>
                             <div class="mail-content">
                                 <div class="mail-header">
-                                    <?php
-                                    $db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
-
-                                    $db->query('select * from users where email = :email', [
-                                        'email' => $item['receiver']
-                                    ]);
-
-                                    $result = $db->fetch();?>
-                                    <p class="contact-name"><?= $result['firstname'].' '.$result['lastname'];?></p>
+                                    <p class="contact-name"><?= $item['firstname']?></p>
                                     <p class="mail-time"><?= $item['send_time']?></p>
                                 </div>
                                 <a href="/mail?id=<?=$item['id']?>">

@@ -2,45 +2,47 @@
 
 namespace Controller;
 
-use Core\Database;
+use Core\DB;
 
 class InboxController extends Controller
 {
-
-    public static function inboxView()
+    public function inbox(): void
     {
-        $db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
+        if (!auth()->check()) {
+            $this->redirect('/');
+        }
 
-        $db->query('select * from mail where sender = :sender order by send_time DESC ', [
-            'sender' => $_SESSION['email']
+        $user = auth()->user();
+        DB::query('select * from mail join users on users.email = mail.sender where receiver = :receiver order by send_time DESC', [
+            'receiver' => $user['email']
         ]);
 
-        $result = $db->fetchAll();
-
-        self::view('show.view.php', [
+        $result = DB::fetchAll();
+        $this->view('show.view.php', [
+            'user' => $user,
             'result' => $result
         ]);
     }
 
-    public static function mailView()
+    public function mail()
     {
-        self::view('partials/show.php');
+        $this->view('partials/show.php');
     }
 
-    public static function sendView()
+    public function sendView()
     {
-        self::view('sent.view.php');
+        $this->view('sent.view.php');
     }
 
-    public static function profileView()
+    public function profileView()
     {
-        self::view('/profile.view.php');
+        $this->view('/profile.view.php');
     }
 
 
-    public static function sendStore()
+    public function sendStore()
     {
-        $db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
+        $db = new DB('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
 
         $db->query('Select * from users where email = :email', [
             'email' => $_SESSION['email']
@@ -49,7 +51,7 @@ class InboxController extends Controller
         $result = $db->fetch();
         $userid= $result['user_id'];
 
-        $db->query("insert into mail(sender, receiver, subject, message, send_time, user_id)
+        $db->query("insert into mail(sender, receiver_id, subject, message, send_time, user_id)
 values(:sender, :receiver, :subject, :message, now(), {$userid});", [
             'sender' => $_SESSION['email'],
             'receiver' => $_POST['sendto'],
@@ -57,21 +59,21 @@ values(:sender, :receiver, :subject, :message, now(), {$userid});", [
             'message' => $_POST['sendmessage']
         ]);
 
-        self::redirect('/inbox');
+        $this->redirect('/inbox');
     }
 
-    public static function search()
+    public function search()
     {
         $search = $_POST['search'];
 
-        $db = new Database('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
+        $db = new DB('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
 
         $db->query("select * from mail where user_id in (select user_id from users where firstname = :search or lastname = :search);", [
             'search' => $search
         ]);
 
         $result = $db->fetchAll();
-        self::view('show.view.php', [
+        $this->view('show.view.php', [
             'result' => $result
         ]);
     }

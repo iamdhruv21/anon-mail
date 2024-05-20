@@ -1,6 +1,8 @@
 <?php
 
 namespace Core;
+use Controller\AuthController;
+
 class Router
 {
     public static $route = [];
@@ -19,12 +21,11 @@ class Router
     {
         foreach (static::$route as $item) {
             if ($item['method'] == $method && $item['uri'] == $uri) {
-                call_user_func($item['controller'].'::'.$item['action']);
-//                $item['controller']::$item['action']();
+                (new $item['controller'])->{$item['action']}();
+                die();
             }
         }
         require "../resources/views/404.php";
-
     }
 
 }
