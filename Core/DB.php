@@ -2,8 +2,7 @@
 
 namespace Core;
 
-use PDO;
-use PDOException;
+use SQLite3;
 
 class DB
 {
@@ -18,9 +17,7 @@ class DB
         $password = '@21Nov2004';
 
         try {
-            self::$connection = new PDO("mysql:host=$servername;dbname=$dbname;", $username, $password, [
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-            ]);
+            self::$connection = new SQLite3("../database/anonmail.sqlite");
         } catch (PDOException $e) {
             echo "Error connecting to the database: " . $e->getMessage();
         }
