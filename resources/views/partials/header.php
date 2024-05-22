@@ -26,6 +26,9 @@
         h2 {
             margin: 0;
         }
+        .read{
+            background-color: rgba(0, 50, 100, 0.1);
+        }
 
         .section-header, .item-wrapper label, .button-wrapper, .tab-bar {
             padding-left: 20px;
@@ -757,14 +760,7 @@
             <div class="logo-wrapper">
                 <p class="logo-name">Anon<span>Mail</span></p>
             </div>
-            <?php
-                $login = false;
-
-                if(isset($_SESSION['logged'])) {
-                    $login = true;
-                }
-            ?>
-            <?php if ($login) :?>
+            <?php if (auth()->check()) :?>
                 <form method="post" action="/inbox" class="search-area">
                     <input type="text" placeholder="Search" name="search"/>
                     <button>
@@ -794,13 +790,13 @@
                 </svg>
             </button>
             <button>
-                <?php if($login) : ?>
+                <?php if (auth()->check()) : ?>
                     <a href="/profile"> <img src="https://randomuser.me/api/portraits/men/34.jpg" alt=""></a>
                 <?php else : ?>
                     <a href='/' style='text-decoration: none'>Log in</a>
                 <?php endif;?>
             </button>
-            <?php if($login) : ?>
+            <?php if (auth()->check()) : ?>
                 <button>
                     <a href="/destroy" style="text-decoration: none;color: inherit">Log out</a>
                 </button>
