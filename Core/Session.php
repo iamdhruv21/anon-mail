@@ -4,11 +4,10 @@ namespace Core;
 
 class Session
 {
-    public function destroy(): void
+    public static function destroy(): void
     {
         session_unset();
         session_destroy();
-        header('location: /');
     }
 
     public function get($key)

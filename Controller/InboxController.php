@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Core\DB;
+use Core\Session;
 
 class InboxController extends Controller
 {
@@ -31,7 +32,29 @@ class InboxController extends Controller
 
     public function mail()
     {
-        $this->view('partials/show.php');
+        DB::query('select * from mail where id = :id', [
+            'id' => $_GET['id']
+        ]);
+        $result = DB::fetch();
+
+        DB::query('select * from users where user_id = :id', [
+            'id' => $result['sender_id']
+        ]);
+        $result2 = DB::fetch();
+
+        DB::query('select * from users where user_id = :id', [
+            'id' => $result['receiver_id']
+        ]);
+        $result3 = DB::fetch();
+
+        DB::query('update mail set seen = 1 where id = :id;', [
+            'id' => $_GET['id']
+        ]);
+        $this->view('partials/show.php', [
+            'result' => $result,
+            'result2' => $result2,
+            'result3' => $result3
+        ]);
     }
 
     public function send()
@@ -87,5 +110,11 @@ class InboxController extends Controller
             'result' => $result,
             'user' => $user
         ]);
+    }
+
+    public function destroy()
+    {
+        Session::destroy();
+        header('location: /');
     }
 }

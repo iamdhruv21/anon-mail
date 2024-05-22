@@ -1,30 +1,9 @@
 <?php
 
-use \Core\DB;
-
 if(! auth()->check()){
     header("location: /");
     exit;
 }
-
-DB::query('select * from mail where id = :id', [
-    'id' => $_GET['id']
-]);
-$result = DB::fetch();
-
-DB::query('select * from users where user_id = :id', [
-    'id' => $result['sender_id']
-]);
-$result2 = DB::fetch();
-
-DB::query('select * from users where user_id = :id', [
-    'id' => $result['receiver_id']
-]);
-$result3 = DB::fetch();
-
-DB::query('update mail set seen = 1 where id = :id;', [
-    'id' => $_GET['id']
-]);
 ?>
 
 <?php require "header.php"?>

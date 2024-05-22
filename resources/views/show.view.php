@@ -1,7 +1,5 @@
 <?php
 
-use Core\DB;
-
 require "partials/header.php";
     require "partials/sidebar.php"
 ?>
@@ -48,7 +46,6 @@ require "partials/header.php";
         </div>
         <div class="mail-list">
             <?php foreach ($result as $item) : ?>
-<!--                --><?php //if ($item['username']."@anonmail.com" == $user['email']) : ?>
                     <input
                         class="mail-item"
                         name="mail-item"
@@ -73,7 +70,6 @@ require "partials/header.php";
                                 </a>
                             </div>
                     </label>
-<!--                --><?php //endif; ?>
             <?php endforeach; ?>
             <?php if (! $result) : ?>
                 <p style="font-size: 1rem; color: gray; text-align: center; margin: 2rem 0">No Email to Show</p>

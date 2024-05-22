@@ -16,7 +16,7 @@ Route::add('GET', '/inbox', [InboxController::class, 'inbox']);
 Route::add('POST', '/inbox', [InboxController::class, 'search']);
 Route::add('GET', '/mail', [InboxController::class, 'mail']);
 
-Route::add('GET', '/destroy', [Session::class, 'destroy']);
+Route::add('GET', '/destroy', [InboxController::class, 'destroy']);
 
 Route::add('GET', '/sent', [InboxController::class, 'send']);
 Route::add('GET', '/profile', [InboxController::class, 'profile']);
