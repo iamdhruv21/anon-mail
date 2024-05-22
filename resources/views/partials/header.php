@@ -321,10 +321,10 @@
         .mail-content a:hover {
             text-decoration: underline;
         }
-        .mail .mail-header {
+        .mail a .mail-header {
             justify-content: space-between;
         }
-        .mail .contact-name {
+        .mail a .contact-name {
             color: #212223;
             font-size: 13px;
             font-weight: 600;
