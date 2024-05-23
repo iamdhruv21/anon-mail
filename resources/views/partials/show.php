@@ -1,21 +1,9 @@
 <?php
 
-use \Core\DB;
-
-if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
+if(! auth()->check()){
     header("location: /");
     exit;
 }
-
-$id = $_GET['id'];
-
-$db = new DB('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
-
-$db->query('select * from mail where id = :id', [
-    'id' => $id
-]);
-
-$result = $db->fetch();
 ?>
 
 <?php require "header.php"?>
@@ -25,13 +13,13 @@ $result = $db->fetch();
         <div class="content-wrapper">
             <div class="profile-pic">
                 <div class="profile-logo yellow">
-                    <p><?= strtoupper(substr($result['receiver'], 0, 1))?></p>
+                    <p><?= strtoupper(substr($result2['firstname'], 0, 1))?></p>
                 </div>
             </div>
 
             <div class="mail-content-wrapper">
                 <div class="contact-info">
-                    <p class="contact-name"><?=$result['receiver']?></p>
+                    <p class="contact-name"><?=$result2['firstname']." ".$result2['lastname']?></p>
                     <div class="right">
                         <p class="mail-time"><?=$result['send_time']?></p>
                         <button>
@@ -48,7 +36,7 @@ $result = $db->fetch();
                         </button>
                     </div>
                 </div>
-                <p>to: <?=$result['sender']?><br><br>
+                <p>to: <?=$result3['username']."@anonmail.com"?><br><br>
 
                     Title: <strong><?=$result['subject']?></strong>.
                     <br>
@@ -59,7 +47,7 @@ $result = $db->fetch();
                     <br>
                     Best,
                     <br>
-                    <br>                    - <?php echo strtoupper(substr($result['receiver'], 0, 1)); echo substr($result['receiver'], 1, stripos($result['receiver'], '@', 0)-1)?></p>
+                    <br>                    - <?= ucfirst($result2['firstname']) ?></p>
                 <div class="reaction-buttons">
                     <button>Looking forward to it!</button>
                     <button>You’re welcome!</button>

@@ -33,48 +33,20 @@ class AuthController extends Controller
 
     public function register()
     {
-        $username = $_POST['username'];
-        $firstname = $_POST['firstName'];
-        $lastname = $_POST['lastName'];
-
-        $password = $_POST['password'];
-        $cpassword = $_POST['cpassword'];
-
-        $db = new DB();
-
-        $db->query("Select * from users where username = :username", [
-            'username' => $username
-        ]);
-
-        $result = $db->fetch();
-
-        if(! $result) {
-            if ($password === $cpassword) {
-                $db->query("insert into users(username, firstname, lastname, email, password)
-                                values(:username, :firstname, :lastname, :email, :password);", [
-                    'username' => $username,
-                    'firstname' => $firstname,
-                    'lastname' => $lastname,
-                    'email' => $username . '@anonmail.com',
-                    'password' => $password
-                ]);
-
-                (new Session)->set('user', [
-                    'logged' => true,
-                    'username' => $username,
-                    'firstname' => $firstname,
-                    'lastname' => $lastname,
-                    'email' => $username . '@anonmail.com'
-                ]);
-
-                $this->redirect('/inbox');
-            }
-        }
-        else {
-            $this->view('register.view.php', [
-                'error' => 'Username or password is incorrect'
+        if (auth()->attemptRegister($_POST['username'], $_POST['firstName'],
+                        $_POST['lastName'], $_POST['password'], $_POST['cpassword'])) {
+            (new Session)->set('user', [
+                'username' => $_POST['username'],
+                'firstname' => $_POST['firstName'],
+                'lastname' => $_POST['lastName'],
+                'email' => $_POST['username'] . '@anonmail.com'
             ]);
-            die();
+
+            $this->redirect('/inbox');
+        } else {
+            $this->view('register.view.php', [
+                'error' => 'Username or password may be Wrong'
+            ]);
         }
     }
 }

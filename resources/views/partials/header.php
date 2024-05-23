@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
         @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800&display=swap");
         html,
@@ -25,6 +26,9 @@
         h1,
         h2 {
             margin: 0;
+        }
+        .read{
+            background-color: rgba(0, 50, 100, 0.1);
         }
 
         .section-header, .item-wrapper label, .button-wrapper, .tab-bar {
@@ -317,10 +321,10 @@
         .mail-content a:hover {
             text-decoration: underline;
         }
-        .mail .mail-header {
+        .mail a .mail-header {
             justify-content: space-between;
         }
-        .mail .contact-name {
+        .mail a .contact-name {
             color: #212223;
             font-size: 13px;
             font-weight: 600;
@@ -757,18 +761,10 @@
             <div class="logo-wrapper">
                 <p class="logo-name">Anon<span>Mail</span></p>
             </div>
-            <?php
-                $login = false;
-
-                if(isset($_SESSION['logged'])) {
-                    $login = true;
-                }
-            ?>
-            <?php if ($login) :?>
-                <form method="post" action="/inbox" class="search-area">
-                    <input type="text" placeholder="Search" name="search"/>
-                    <button>
-                        <input type="submit" value="">
+            <?php if (auth()->check()) :?>
+                <form action="/inbox" class="search-area">
+                    <input type="text" placeholder="Search" name="q"/>
+                    <button type="submit">
                         <svg
                             width="20"
                             height="20"
@@ -794,13 +790,13 @@
                 </svg>
             </button>
             <button>
-                <?php if($login) : ?>
+                <?php if (auth()->check()) : ?>
                     <a href="/profile"> <img src="https://randomuser.me/api/portraits/men/34.jpg" alt=""></a>
                 <?php else : ?>
                     <a href='/' style='text-decoration: none'>Log in</a>
                 <?php endif;?>
             </button>
-            <?php if($login) : ?>
+            <?php if (auth()->check()) : ?>
                 <button>
                     <a href="/destroy" style="text-decoration: none;color: inherit">Log out</a>
                 </button>

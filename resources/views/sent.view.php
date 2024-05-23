@@ -1,20 +1,9 @@
 
 <?php
 
-use \Core\DB;
-
-if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
+if(! auth()->check()){
     header("location: /");
-    exit;
 }
-
-//$db = new DB('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
-//
-//$db->query('select * from mail where id = :id', [
-//    'id' => $id
-//]);
-
-//$result = $db->fetch();
 ?>
 
 <?php require "partials/header.php"?>
@@ -46,7 +35,7 @@ if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
                         </button>
                     </div>
                 </div>
-                <p>from: <?= $_SESSION['email']?><br><br>
+                <p>from: <?= $user['email']?><br><br>
 
                     Title: <input class="inbox" type="text" id="sendtitle" name="sendtitle">
                     <br>
@@ -57,7 +46,7 @@ if(!isset($_SESSION['logged']) || !$_SESSION['logged']){
                     <br>
                     Best,
                     <br>
-                    <br>                    - Name</p>
+                    <br>                    - <?= ucfirst($user['firstname'])?></p>
                 <div class="reaction-buttons">
                     <input type="submit" class="compose-button" value="S E N D">
                 </div>

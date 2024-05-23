@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Core\DB;
+use Core\Session;
 
 class InboxController extends Controller
 {
@@ -11,10 +12,15 @@ class InboxController extends Controller
         if (!auth()->check()) {
             $this->redirect('/');
         }
-
         $user = auth()->user();
-        DB::query('select * from mail join users on users.email = mail.sender where receiver = :receiver order by send_time DESC', [
-            'receiver' => $user['email']
+
+        DB::query('select user_id from users where username = :username', [
+            'username' => $user['username']
+        ]);
+        $result = DB::fetch();
+
+        DB::query('select * from mail join users on users.user_id = mail.sender_id where receiver_id = :receiver order by send_time DESC', [
+            'receiver' => $result['user_id']
         ]);
 
         $result = DB::fetchAll();
@@ -26,35 +32,64 @@ class InboxController extends Controller
 
     public function mail()
     {
-        $this->view('partials/show.php');
+        DB::query('select * from mail where id = :id', [
+            'id' => $_GET['id']
+        ]);
+        $result = DB::fetch();
+
+        DB::query('select * from users where user_id = :id', [
+            'id' => $result['sender_id']
+        ]);
+        $result2 = DB::fetch();
+
+        DB::query('select * from users where user_id = :id', [
+            'id' => $result['receiver_id']
+        ]);
+        $result3 = DB::fetch();
+
+        DB::query('update mail set seen = 1 where id = :id;', [
+            'id' => $_GET['id']
+        ]);
+        $this->view('partials/show.php', [
+            'result' => $result,
+            'result2' => $result2,
+            'result3' => $result3
+        ]);
     }
 
-    public function sendView()
+    public function send()
     {
-        $this->view('sent.view.php');
+        $user = auth()->user();
+        $this->view('sent.view.php',[
+            'user' => $user
+        ]);
     }
 
-    public function profileView()
+    public function profile()
     {
-        $this->view('/profile.view.php');
+        $user = auth()->user();
+        $this->view('profile.view.php',[
+            'user' => $user
+        ]);
     }
 
 
     public function sendStore()
     {
-        $db = new DB('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
-
-        $db->query('Select * from users where email = :email', [
-            'email' => $_SESSION['email']
+        DB::query('Select * from users where username = :username', [
+            'username' => substr($_POST['sendto'], 0, stripos($_POST['sendto'], '@', 0))
         ]);
+        $result = DB::fetch();
 
-        $result = $db->fetch();
-        $userid= $result['user_id'];
+        DB::query('Select * from users where username = :username', [
+            'username' => $_SESSION['user']['username']
+        ]);
+        $result2 = DB::fetch();
 
-        $db->query("insert into mail(sender, receiver_id, subject, message, send_time, user_id)
-values(:sender, :receiver, :subject, :message, now(), {$userid});", [
-            'sender' => $_SESSION['email'],
-            'receiver' => $_POST['sendto'],
+        DB::query("insert into mail(sender_id, receiver_id, subject, message, send_time)
+                    values(:sender_id, :receiver_id, :subject, :message, now());", [
+            'sender_id' => $result2['user_id'],
+            'receiver_id' => $result['user_id'],
             'subject' => $_POST['sendtitle'],
             'message' => $_POST['sendmessage']
         ]);
@@ -65,16 +100,21 @@ values(:sender, :receiver, :subject, :message, now(), {$userid});", [
     public function search()
     {
         $search = $_POST['search'];
-
-        $db = new DB('127.0.0.2', 'anonmail', 'root', '@21Nov2004');
-
-        $db->query("select * from mail where user_id in (select user_id from users where firstname = :search or lastname = :search);", [
+        DB::query("select * from mail join users on users.user_id = mail.receiver_id where receiver_id in (select user_id from users where firstname = :search or lastname = :search);", [
             'search' => $search
         ]);
 
-        $result = $db->fetchAll();
+        $result = DB::fetchAll();
+        $user = auth()->user();
         $this->view('show.view.php', [
-            'result' => $result
+            'result' => $result,
+            'user' => $user
         ]);
+    }
+
+    public function destroy()
+    {
+        Session::destroy();
+        header('location: /');
     }
 }

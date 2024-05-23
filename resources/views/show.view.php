@@ -1,5 +1,6 @@
 <?php
-    require "partials/header.php";
+
+require "partials/header.php";
     require "partials/sidebar.php"
 ?>
 
@@ -45,33 +46,33 @@
         </div>
         <div class="mail-list">
             <?php foreach ($result as $item) : ?>
-                <?php if ($item['receiver'] == $user['email']) : ?>
                     <input
                         class="mail-item"
                         name="mail-item"
                         type="radio"
                         id="mail-<?= $item['id']?>"
-                        checked
                     />
-                    <label for="mail-<?= $item['id']?>" class="mail">
+                    <label for="mail-<?= $item['id']?>" class="mail <?= (! $item['seen']) ? "read" : ""?>">
 
+                         <a href="/mail?id=<?=$item['id']?>" style="text-decoration: none; display: flex; color: inherit;width: inherit">
                             <div class="profile-pic">
                                 <div class="profile-logo <?php $a = [1=>'blue', 2 => 'yellow', 3 => 'green']; echo $a[(rand(1, 3))]; $flag=false;?>">
-                                    <p><?= strtoupper(substr($item['receiver'], 0, 1))?></p>
+                                    <p><?= strtoupper(substr($item['firstname'], 0, 1)) ?? 'P' ?></p>
                                 </div>
                             </div>
                             <div class="mail-content">
                                 <div class="mail-header">
-                                    <p class="contact-name"><?= $item['firstname']?></p>
+                                    <p class="contact-name"><?= ucfirst($item['firstname']) . ' ' . ucfirst($item['lastname'])?></p>
                                     <p class="mail-time"><?= $item['send_time']?></p>
                                 </div>
-                                <a href="/mail?id=<?=$item['id']?>">
                                     <p class="mail-text"><?= $item['message']?></p>
-                                </a>
                             </div>
+                        </a>
                     </label>
-                <?php endif; ?>
             <?php endforeach; ?>
+            <?php if (! $result) : ?>
+                <p style="font-size: 1rem; color: gray; text-align: center; margin: 2rem 0">No Email to Show</p>
+            <?php endif; ?>
         </div>
     </div>
 
