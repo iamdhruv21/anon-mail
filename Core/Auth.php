@@ -14,6 +14,7 @@ class Auth
         if($result) {
             if ($result['password'] === $password) {
                 session()->set('user', [
+                    'id' => $result['user_id'],
                     'username' => $result['username'],
                     'firstname' => $result['firstname'],
                     'lastname' => $result['lastname'],

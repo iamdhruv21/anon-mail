@@ -762,10 +762,9 @@
                 <p class="logo-name">Anon<span>Mail</span></p>
             </div>
             <?php if (auth()->check()) :?>
-                <form method="post" action="/inbox" class="search-area">
-                    <input type="text" placeholder="Search" name="search"/>
-                    <button>
-                        <input type="submit" value="">
+                <form action="/inbox" class="search-area">
+                    <input type="text" placeholder="Search" name="q"/>
+                    <button type="submit">
                         <svg
                             width="20"
                             height="20"

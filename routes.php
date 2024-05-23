@@ -13,7 +13,6 @@ Route::add('POST', '/register', [AuthController::class, 'register']);
 
 // Mailbox Routes
 Route::add('GET', '/inbox', [InboxController::class, 'inbox']);
-Route::add('POST', '/inbox', [InboxController::class, 'search']);
 Route::add('GET', '/mail', [InboxController::class, 'mail']);
 
 Route::add('GET', '/destroy', [InboxController::class, 'destroy']);
