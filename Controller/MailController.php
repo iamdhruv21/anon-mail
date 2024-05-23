@@ -3,10 +3,17 @@
 namespace Controller;
 
 use Core\DB;
-use Core\Session;
 
-class InboxController extends Controller
+class MailController extends Controller
 {
+    public function compose()
+    {
+        $user = auth()->user();
+        $this->view('sent.view.php',[
+            'user' => $user
+        ]);
+    }
+
     public function inbox(): void
     {
         if (!auth()->check()) {
@@ -30,7 +37,7 @@ class InboxController extends Controller
         ]);
     }
 
-    public function mail()
+    public function show(): void
     {
         DB::query('select * from mail where id = :id', [
             'id' => $_GET['id']
@@ -57,38 +64,17 @@ class InboxController extends Controller
         ]);
     }
 
-    public function send()
-    {
-        $user = auth()->user();
-        $this->view('sent.view.php',[
-            'user' => $user
-        ]);
-    }
 
-    public function profile()
-    {
-        $user = auth()->user();
-        $this->view('profile.view.php',[
-            'user' => $user
-        ]);
-    }
-
-
-    public function sendStore()
+    public function sendMail()
     {
         DB::query('Select * from users where username = :username', [
             'username' => substr($_POST['sendto'], 0, stripos($_POST['sendto'], '@', 0))
         ]);
         $result = DB::fetch();
 
-        DB::query('Select * from users where username = :username', [
-            'username' => $_SESSION['user']['username']
-        ]);
-        $result2 = DB::fetch();
-
         DB::query("insert into mail(sender_id, receiver_id, subject, message, send_time)
                     values(:sender_id, :receiver_id, :subject, :message, now());", [
-            'sender_id' => $result2['user_id'],
+            'sender_id' => auth()->user()['id'],
             'receiver_id' => $result['user_id'],
             'subject' => $_POST['sendtitle'],
             'message' => $_POST['sendmessage']
@@ -112,9 +98,4 @@ class InboxController extends Controller
         ]);
     }
 
-    public function destroy()
-    {
-        Session::destroy();
-        header('location: /');
-    }
 }

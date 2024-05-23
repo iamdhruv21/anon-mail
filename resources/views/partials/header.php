@@ -798,7 +798,7 @@
             </button>
             <?php if (auth()->check()) : ?>
                 <button>
-                    <a href="/destroy" style="text-decoration: none;color: inherit">Log out</a>
+                    <a href="/logout" style="text-decoration: none;color: inherit">Log out</a>
                 </button>
             <?php endif; ?>
         </div>
