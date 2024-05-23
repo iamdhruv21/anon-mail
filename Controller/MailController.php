@@ -20,17 +20,24 @@ class MailController extends Controller
             $this->redirect('/');
         }
         $user = auth()->user();
+        $search = null;
+        if (isset($_GET['q'])) {
+            $search = $_GET['q'];
+        }
 
-        DB::query('select user_id from users where username = :username', [
-            'username' => $user['username']
-        ]);
-        $result = DB::fetch();
+        $query = 'select mail.id, subject, message, send_time, seen, username, firstname, lastname from mail join users on users.id = mail.sender_id where receiver_id = :receiver ';
+        if (!is_null($search)) {
+            $query .= "and users.firstname like :search or users.lastname like :search ";
+        }
+        $query .= 'order by send_time DESC';
+        $params = ['receiver' => $user['id']];
+        if (!is_null($search)) {
+            $params['search'] = "%{$search}%";
+        }
 
-        DB::query('select * from mail join users on users.user_id = mail.sender_id where receiver_id = :receiver order by send_time DESC', [
-            'receiver' => $result['user_id']
-        ]);
-
+        DB::query($query, $params);
         $result = DB::fetchAll();
+
         $this->view('show.view.php', [
             'user' => $user,
             'result' => $result
@@ -44,12 +51,12 @@ class MailController extends Controller
         ]);
         $result = DB::fetch();
 
-        DB::query('select * from users where user_id = :id', [
+        DB::query('select * from users where id = :id', [
             'id' => $result['sender_id']
         ]);
         $result2 = DB::fetch();
 
-        DB::query('select * from users where user_id = :id', [
+        DB::query('select * from users where id = :id', [
             'id' => $result['receiver_id']
         ]);
         $result3 = DB::fetch();
@@ -64,7 +71,6 @@ class MailController extends Controller
         ]);
     }
 
-
     public function sendMail()
     {
         DB::query('Select * from users where username = :username', [
@@ -73,29 +79,13 @@ class MailController extends Controller
         $result = DB::fetch();
 
         DB::query("insert into mail(sender_id, receiver_id, subject, message, send_time)
-                    values(:sender_id, :receiver_id, :subject, :message, now());", [
+                    values(:sender_id, :receiver_id, :subject, :message, time());", [
             'sender_id' => auth()->user()['id'],
-            'receiver_id' => $result['user_id'],
+            'receiver_id' => $result['id'],
             'subject' => $_POST['sendtitle'],
             'message' => $_POST['sendmessage']
         ]);
 
         $this->redirect('/inbox');
     }
-
-    public function search()
-    {
-        $search = $_POST['search'];
-        DB::query("select * from mail join users on users.user_id = mail.receiver_id where receiver_id in (select user_id from users where firstname = :search or lastname = :search);", [
-            'search' => $search
-        ]);
-
-        $result = DB::fetchAll();
-        $user = auth()->user();
-        $this->view('show.view.php', [
-            'result' => $result,
-            'user' => $user
-        ]);
-    }
-
 }
