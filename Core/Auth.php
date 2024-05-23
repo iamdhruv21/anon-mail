@@ -14,7 +14,7 @@ class Auth
         if($result) {
             if ($result['password'] === $password) {
                 session()->set('user', [
-                    'id' => $result['user_id'],
+                    'id' => $result['id'],
                     'username' => $result['username'],
                     'firstname' => $result['firstname'],
                     'lastname' => $result['lastname'],
@@ -26,27 +26,20 @@ class Auth
         return  false;
     }
 
-    public function attemptRegister($username,$firstname, $lastname, $password, $cpassword): bool
+    public function attemptRegister($username,$firstname, $lastname, $password): array
     {
+        DB::query("insert into users(username, firstname, lastname, password)
+            values(:username, :firstname, :lastname, :password);", [
+                'username' => $username,
+                'firstname' => $firstname,
+                'lastname' => $lastname,
+                'password' => $password
+            ]);
 
         DB::query('select * from users where username = :username', [
             'username' => $username
         ]);
-        $result = DB::fetch();
-
-        if(! $result) {
-            if ($password === $cpassword) {
-                DB::query("insert into users(username, firstname, lastname, password)
-                                values(:username, :firstname, :lastname, :password);", [
-                    'username' => $username,
-                    'firstname' => $firstname,
-                    'lastname' => $lastname,
-                    'password' => $password
-                ]);
-                return true;
-            }
-        }
-        return  false;
+        return DB::fetch();
     }
 
     public function check(): bool

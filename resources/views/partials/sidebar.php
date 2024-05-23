@@ -1,7 +1,7 @@
 <div class="side-bar">
     <div class="side-bar-content">
         <div class="button-wrapper">
-            <a href="/sent" class="compose-button" style="text-decoration: none">
+            <a href="/compose" class="compose-button" style="text-decoration: none">
                 <img src="https://i.ibb.co/6nk5kzD/Screen-Shot-2018-05-18-at-12-07-42-PM.png" alt="">
                 <p>COMPOSE</p>
             </a>

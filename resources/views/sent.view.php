@@ -17,7 +17,7 @@ if(! auth()->check()){
                 </div>
             </div>
 
-            <form class="mail-content-wrapper" action="/send" method="post">
+            <form class="mail-content-wrapper" action="/send-mail" method="post">
                 <div class="contact-info">
                     <p class="contact-name">To: <input type="text" id="sendto" name="sendto" class="inbox"></p>
                     <div class="right">

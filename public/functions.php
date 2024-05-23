@@ -1,7 +1,7 @@
 <?php
 
 use Controller\AuthController;
-use Controller\InboxController;
+use Controller\MailController;
 use Core\Auth;
 use Core\Session;
 
@@ -22,5 +22,5 @@ function getAuth()
 
 function getinbox()
 {
-    return new InboxController();
+    return new MailController();
 }

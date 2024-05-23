@@ -33,20 +33,47 @@ class AuthController extends Controller
 
     public function register()
     {
-        if (auth()->attemptRegister($_POST['username'], $_POST['firstName'],
-                        $_POST['lastName'], $_POST['password'], $_POST['cpassword'])) {
-            (new Session)->set('user', [
-                'username' => $_POST['username'],
-                'firstname' => $_POST['firstName'],
-                'lastname' => $_POST['lastName'],
-                'email' => $_POST['username'] . '@anonmail.com'
-            ]);
+        $data = $_POST;
+        $errors = [];
+        DB::query('select * from users where username = :username', [
+            'username' => $data['username']
+        ]);
+        $result = DB::fetch();
+        if ($result) {
+            $errors[] = 'This username already exists in database';
+        }
 
-            $this->redirect('/inbox');
-        } else {
+        if ($data['password'] !== $data['cpassword']) {
+            $errors[] = 'Confirm Password and password must be same';
+        }
+
+        if (count($errors) > 0) {
             $this->view('register.view.php', [
-                'error' => 'Username or password may be Wrong'
+                'error' => $errors[0]
             ]);
         }
+
+        $user = auth()->attemptRegister(
+            $data['username'],
+            $data['firstName'],
+            $data['lastName'],
+            $data['password']
+        );
+
+        session()->set('user', [
+            'id' => $user['id'],
+            'username' => $user['username'],
+            'firstname' => $user['firstName'],
+            'lastname' => $user['lastName'],
+            'email' => $user['username'] . '@anonmail.com'
+        ]);
+
+        $this->redirect('/inbox');
+    }
+
+    public function logout(): void
+    {
+        Session::destroy();
+        header('location: /');
     }
 }
